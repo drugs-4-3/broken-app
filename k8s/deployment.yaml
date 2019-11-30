@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: broken-app-service
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+  selector:
+    app: broken-app
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broken-app-deployment
+spec:
+  selector:
+    matchLabels:
+      app: broken-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: broken-app
+    spec:
+      containers:
+        - name: broken-app
+          image: "ifeel3/broken-app:v1"
+          ports:
+            - containerPort: 8000
